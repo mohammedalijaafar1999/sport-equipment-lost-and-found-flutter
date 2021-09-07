@@ -1,50 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
 import 'dart:convert';
 import '../../Utils/Globals.dart' as globals;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class Register extends StatefulWidget {
-  Register({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  Login({Key? key}) : super(key: key);
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _LoginState createState() => _LoginState();
 }
 
-class _RegisterState extends State<Register> {
-  final nameController = TextEditingController();
+class _LoginState extends State<Login> {
   final emailController = TextEditingController();
-  final phoneController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void register() async {
+  void login() async {
     var resposone = await http.post(
-      Uri.parse("http://" + globals.hostname + '/api/register'),
+      Uri.parse("http://" + globals.hostname + '/api/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'name': nameController.text,
         'email': emailController.text,
-        'mobile_number': phoneController.text,
         'password': passwordController.text,
       }),
     );
     var data = jsonDecode(resposone.body);
 
     print(data["token"]);
-  }
-
-  void getToken() async {
     final storage = new FlutterSecureStorage();
+    await storage.write(key: 'token', value: data["token"]);
     print(await storage.read(key: "token"));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getToken();
   }
 
   @override
@@ -59,7 +46,7 @@ class _RegisterState extends State<Register> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Register",
+                    "Login",
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 42,
@@ -68,31 +55,9 @@ class _RegisterState extends State<Register> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        hintText: "Full Name",
-                        hintStyle: TextStyle(
-                            fontSize: 20.0, color: Colors.grey.shade400),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
                       controller: emailController,
                       decoration: InputDecoration(
                         hintText: "Email",
-                        hintStyle: TextStyle(
-                            fontSize: 20.0, color: Colors.grey.shade400),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: phoneController,
-                      decoration: InputDecoration(
-                        hintText: "Phone",
                         hintStyle: TextStyle(
                             fontSize: 20.0, color: Colors.grey.shade400),
                       ),
@@ -114,12 +79,12 @@ class _RegisterState extends State<Register> {
                     height: 20,
                   ),
                   GestureDetector(
-                    onTap: register,
+                    onTap: login,
                     child: Container(
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Text(
-                          "Register",
+                          "Login",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -130,16 +95,7 @@ class _RegisterState extends State<Register> {
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(15)),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                      );
-                    },
-                    child: Text('asd'),
-                  ),
+                  )
                 ],
               ),
             ),

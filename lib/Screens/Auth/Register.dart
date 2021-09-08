@@ -5,6 +5,8 @@ import 'dart:convert';
 import '../../Utils/Globals.dart' as globals;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../Home.dart';
+
 class Register extends StatefulWidget {
   Register({Key? key}) : super(key: key);
 
@@ -34,6 +36,11 @@ class _RegisterState extends State<Register> {
     var data = jsonDecode(resposone.body);
 
     print(data["token"]);
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'token', value: data["token"]);
+    print(await storage.read(key: "token"));
+    await Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Home()));
   }
 
   void getToken() async {
@@ -133,12 +140,12 @@ class _RegisterState extends State<Register> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => Login()),
                       );
                     },
-                    child: Text('asd'),
+                    child: Text('have an account already? Login'),
                   ),
                 ],
               ),

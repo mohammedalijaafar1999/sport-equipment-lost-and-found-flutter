@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Screens/Auth/Register.dart';
+import 'Screens/LoadingScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -7,6 +7,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Register(),
+      home: LoadingScreen(),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Register.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Home.dart';
 import 'dart:convert';
 import '../../Utils/Globals.dart' as globals;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -32,6 +34,8 @@ class _LoginState extends State<Login> {
     final storage = new FlutterSecureStorage();
     await storage.write(key: 'token', value: data["token"]);
     print(await storage.read(key: "token"));
+    await Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Home()));
   }
 
   @override
@@ -95,7 +99,16 @@ class _LoginState extends State<Login> {
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(15)),
                     ),
-                  )
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Register()),
+                      );
+                    },
+                    child: Text('don\'t have an account? Register'),
+                  ),
                 ],
               ),
             ),

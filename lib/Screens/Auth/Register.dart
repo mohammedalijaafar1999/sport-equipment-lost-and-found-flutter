@@ -3,9 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
 import 'dart:convert';
 import '../../Utils/Globals.dart' as globals;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../Home.dart';
 
 class Register extends StatefulWidget {
   Register({Key? key}) : super(key: key);
@@ -21,7 +18,7 @@ class _RegisterState extends State<Register> {
   final passwordController = TextEditingController();
 
   void register() async {
-    var resposone = await http.post(
+    var response = await http.post(
       Uri.parse("http://" + globals.hostname + '/api/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -33,25 +30,21 @@ class _RegisterState extends State<Register> {
         'password': passwordController.text,
       }),
     );
-    var data = jsonDecode(resposone.body);
+    var data = jsonDecode(response.body);
 
-    print(data["token"]);
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: 'token', value: data["token"]);
-    print(await storage.read(key: "token"));
-    await Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Home()));
-  }
-
-  void getToken() async {
-    final storage = new FlutterSecureStorage();
-    print(await storage.read(key: "token"));
+    print(response.statusCode);
+    print(data);
+    if (response.statusCode == 201) {
+      await Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Login()));
+    } else {
+      print(data["message"]);
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    getToken();
   }
 
   @override

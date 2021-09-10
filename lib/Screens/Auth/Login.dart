@@ -18,7 +18,7 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
 
   void login() async {
-    var resposone = await http.post(
+    var response = await http.post(
       Uri.parse("http://" + globals.hostname + '/api/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -28,14 +28,22 @@ class _LoginState extends State<Login> {
         'password': passwordController.text,
       }),
     );
-    var data = jsonDecode(resposone.body);
 
-    print(data["token"]);
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: 'token', value: data["token"]);
-    print(await storage.read(key: "token"));
-    await Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Home()));
+    var data = jsonDecode(response.body);
+
+    print(response.statusCode);
+    print(data);
+
+    if (response.statusCode == 201) {
+      print(data["token"]);
+      final storage = new FlutterSecureStorage();
+      await storage.write(key: 'token', value: data["token"]);
+      print(await storage.read(key: "token"));
+      await Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
+    } else {
+      print(data["message"]);
+    }
   }
 
   @override

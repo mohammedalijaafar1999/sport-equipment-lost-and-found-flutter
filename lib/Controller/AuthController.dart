@@ -19,8 +19,7 @@ class AuthController {
     );
 
     //check validity of token
-    var data = jsonDecode(response.body);
-    if (data["message"] != null) {
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
       return false;
     } else {
       return true;

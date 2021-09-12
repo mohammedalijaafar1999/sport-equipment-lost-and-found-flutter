@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
@@ -35,11 +33,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
 
     //check validity of token
-    var data = jsonDecode(response.body);
-    if (data["message"] != null) {
-      return false;
-    } else {
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
       return true;
+    } else {
+      return false;
     }
   }
 

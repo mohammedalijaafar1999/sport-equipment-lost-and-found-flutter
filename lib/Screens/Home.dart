@@ -16,18 +16,22 @@ class _HomeState extends State<Home> {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: "token");
 
-    await http.post(
-      Uri.parse("http://" + globals.hostname + '/api/login'),
+    var response = await http.post(
+      Uri.parse("http://" + globals.hostname + '/api/logout'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       },
     );
 
-    storage.delete(key: 'token').then((value) => {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Login()))
-        });
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+      storage.delete(key: 'token').then((value) => {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Login()))
+          });
+    } else {
+      print("logout from server failed");
+    }
   }
 
   @override

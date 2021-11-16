@@ -6,7 +6,6 @@ import 'package:sports_equipment_lost_and_found_it_project/Screens/Home.dart';
 import '../../Assets/Constants.dart';
 import '../../CustomWidgets/CustomTextField.dart';
 import '../../Controller/AuthController.dart';
-import '../../Assets/Constants.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -52,6 +51,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Column(

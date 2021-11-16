@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:sports_equipment_lost_and_found_it_project/Assets/Constants.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
-import 'dart:convert';
-import '../../Utils/Globals.dart' as globals;
+import '../../CustomWidgets/CustomTextField.dart';
+import './Login.dart';
 
 class Register extends StatefulWidget {
   Register({Key? key}) : super(key: key);
@@ -18,28 +19,49 @@ class _RegisterState extends State<Register> {
   final passwordController = TextEditingController();
 
   void register() async {
-    var response = await http.post(
-      Uri.parse("http://" + globals.hostname + '/api/register'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'name': nameController.text,
-        'email': emailController.text,
-        'mobile_number': phoneController.text,
-        'password': passwordController.text,
-      }),
-    );
-    var data = jsonDecode(response.body);
+    var ac = new AuthController();
+    var registered = await ac.register(nameController.text,
+        emailController.text, phoneController.text, passwordController.text);
 
-    print(response.statusCode);
-    print(data);
-    if (response.statusCode == 201) {
-      await Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Login()));
-    } else {
-      print(data["message"]);
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        phoneController.text.isEmpty ||
+        passwordController.text.isEmpty) {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Alert'),
+          content: const Text('Don\'t leave any fields empty'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
     }
+
+    if (registered) {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => Login()));
+    } else {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Alert'),
+          content: const Text('Something went wrong'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    // var request = http.MultipartRequest("post", Uri.parse(""));
   }
 
   @override
@@ -58,87 +80,93 @@ class _RegisterState extends State<Register> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Register",
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 42,
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text("Register", style: Heading1),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        hintText: "Full Name",
-                        hintStyle: TextStyle(
-                            fontSize: 20.0, color: Colors.grey.shade400),
-                      ),
-                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: CustomTextField(
+                        hintText: "Full Name", controller: nameController),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        hintText: "Email",
-                        hintStyle: TextStyle(
-                            fontSize: 20.0, color: Colors.grey.shade400),
-                      ),
-                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: CustomTextField(
+                        hintText: "Email", controller: emailController),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: phoneController,
-                      decoration: InputDecoration(
-                        hintText: "Phone",
-                        hintStyle: TextStyle(
-                            fontSize: 20.0, color: Colors.grey.shade400),
-                      ),
-                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: CustomTextField(
+                        hintText: "Phone", controller: phoneController),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      obscureText: true,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: CustomTextField(
+                      hintText: "Password",
                       controller: passwordController,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        hintStyle: TextStyle(
-                            fontSize: 20.0, color: Colors.grey.shade400),
-                      ),
+                      obsecureText: true,
                     ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  GestureDetector(
-                    onTap: register,
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Text(
-                          "Register",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                    child: GestureDetector(
+                      onTap: register,
+                      child: Container(
+                        width: double.infinity,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(
+                              "Register",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                            color: PrimaryColor,
+                            borderRadius: BorderRadius.circular(5)),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: TextColorBlack,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "have an account already? Login",
+                            style: paragraph.copyWith(
+                              color: TextColorWhite,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(15)),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Login()),
-                      );
-                    },
-                    child: Text('have an account already? Login'),
                   ),
                 ],
               ),

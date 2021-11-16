@@ -1,12 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Register.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Home.dart';
-import 'dart:convert';
-import '../../Utils/Globals.dart' as globals;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../Assets/Constants.dart';
 import '../../CustomWidgets/CustomTextField.dart';
+import '../../Controller/AuthController.dart';
+import '../../Assets/Constants.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -20,31 +20,32 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
 
   void login() async {
-    var response = await http.post(
-      Uri.parse("http://" + globals.hostname + '/api/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': emailController.text,
-        'password': passwordController.text,
-      }),
-    );
-
-    var data = jsonDecode(response.body);
-
-    print(response.statusCode);
-    print(data);
-
-    if (response.statusCode == 201) {
-      print(data["token"]);
-      final storage = new FlutterSecureStorage();
-      await storage.write(key: 'token', value: data["token"]);
-      print(await storage.read(key: "token"));
-      await Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Home()));
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      AuthController ac = new AuthController();
+      bool completed =
+          await ac.login(emailController.text, passwordController.text);
+      if (completed) {
+        print("Logged in successfully");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => Home()));
+      } else {
+        print("Something went wrong");
+      }
     } else {
-      print(data["message"]);
+      print("inputs are empty");
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Alert'),
+          content: const Text('Don\'t leave any inputs empty'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
                 child: Column(
                   children: [
                     Text(
-                      'Welcome',
+                      'Mafqoud',
                       style: Heading1,
                     ),
                     SizedBox(
@@ -92,19 +93,18 @@ class _LoginState extends State<Login> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 0),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: login,
                         child: Container(
                           height: 50,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: Colors.red.shade400,
+                            color: PrimaryColor,
                           ),
                           child: Center(
                             child: Text(
                               "Login",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                              style: Heading2.copyWith(color: TextColorWhite),
                             ),
                           ),
                         ),
@@ -125,14 +125,14 @@ class _LoginState extends State<Login> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: Color(0xFF2D3243),
+                            color: TextColorBlack,
                           ),
                           child: Center(
                             child: Text(
                               "don't have an account? Register",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                              style: paragraph.copyWith(
+                                color: TextColorWhite,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -150,81 +150,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-    // return Scaffold(
-    //   body: SafeArea(
-    //     child: Center(
-    //       child: SingleChildScrollView(
-    //         child: Container(
-    //           width: 350,
-    //           child: Column(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: [
-    //               Text(
-    //                 "Login",
-    //                 style: TextStyle(
-    //                   color: Colors.grey.shade600,
-    //                   fontSize: 42,
-    //                 ),
-    //               ),
-    //               Padding(
-    //                 padding: const EdgeInsets.all(8.0),
-    //                 child: TextField(
-    //                   controller: emailController,
-    //                   decoration: InputDecoration(
-    //                     hintText: "Email",
-    //                     hintStyle: TextStyle(
-    //                         fontSize: 20.0, color: Colors.grey.shade400),
-    //                   ),
-    //                 ),
-    //               ),
-    //               Padding(
-    //                 padding: const EdgeInsets.all(8.0),
-    //                 child: TextField(
-    //                   obscureText: true,
-    //                   controller: passwordController,
-    //                   decoration: InputDecoration(
-    //                     hintText: "Password",
-    //                     hintStyle: TextStyle(
-    //                         fontSize: 20.0, color: Colors.grey.shade400),
-    //                   ),
-    //                 ),
-    //               ),
-    //               SizedBox(
-    //                 height: 20,
-    //               ),
-    //               GestureDetector(
-    //                 onTap: login,
-    //                 child: Container(
-    //                   child: Padding(
-    //                     padding: const EdgeInsets.all(12.0),
-    //                     child: Text(
-    //                       "Login",
-    //                       style: TextStyle(
-    //                         color: Colors.white,
-    //                         fontSize: 24,
-    //                       ),
-    //                     ),
-    //                   ),
-    //                   decoration: BoxDecoration(
-    //                       color: Colors.blue,
-    //                       borderRadius: BorderRadius.circular(15)),
-    //                 ),
-    //               ),
-    //               TextButton(
-    //                 onPressed: () {
-    //                   Navigator.pushReplacement(
-    //                     context,
-    //                     MaterialPageRoute(builder: (context) => Register()),
-    //                   );
-    //                 },
-    //                 child: Text('don\'t have an account? Register'),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }

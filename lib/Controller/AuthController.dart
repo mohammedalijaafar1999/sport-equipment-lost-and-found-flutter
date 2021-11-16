@@ -11,7 +11,7 @@ class AuthController {
 
     //use token to check validity of it
     var response = await http.get(
-      Uri.parse("http://" + globals.hostname + '/api/user/getEquipments'),
+      Uri.parse(globals.hostname + '/api/user/getEquipments'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -52,7 +52,7 @@ class AuthController {
   Future<bool> register(
       String name, String email, String phone, String password) async {
     var response = await http.post(
-      Uri.parse("http://" + globals.hostname + '/api/register'),
+      Uri.parse(globals.hostname + '/api/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -73,7 +73,7 @@ class AuthController {
 
   Future<bool> login(String email, String password) async {
     var response = await http.post(
-      Uri.parse("http://" + globals.hostname + '/api/login'),
+      Uri.parse(globals.hostname + '/api/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -99,7 +99,7 @@ class AuthController {
     var token = await storage.read(key: "token");
 
     await http.post(
-      Uri.parse("http://" + globals.hostname + '/api/login'),
+      Uri.parse(globals.hostname + '/api/logout'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',

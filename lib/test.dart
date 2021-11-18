@@ -16,7 +16,6 @@ class Test extends StatefulWidget {
 
 class _TestState extends State<Test> {
   File? file;
-  var imageProvider = Image.asset("image.jpg"); //as ImageProvider<Object>;
 
   void send() async {
     var uri = Uri.parse(globals.hostname + "/api/user/createEquipment");
@@ -29,6 +28,8 @@ class _TestState extends State<Test> {
     request.fields['equipment_description'] = 'bla';
     request.fields['equipment_status_id'] = '1';
     request.fields['equipment_type_id'] = '1';
+    request.files
+        .add(await http.MultipartFile.fromPath("images[]", file!.path));
 
     var res = await request.send();
     print(request);

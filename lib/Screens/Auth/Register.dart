@@ -76,7 +76,7 @@ class _RegisterState extends State<Register> {
         child: Center(
           child: SingleChildScrollView(
             child: Container(
-              width: 350,
+              padding: EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -126,15 +126,16 @@ class _RegisterState extends State<Register> {
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
                               "Register",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                              ),
+                              style: Heading2.copyWith(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : Colors.white),
                             ),
                           ),
                         ),
                         decoration: BoxDecoration(
-                            color: PrimaryColor,
+                            color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(5)),
                       ),
                     ),
@@ -153,16 +154,17 @@ class _RegisterState extends State<Register> {
                         height: 50,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: TextColorBlack,
-                        ),
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.black),
                         child: Center(
                           child: Text(
                             "have an account already? Login",
                             style: paragraph.copyWith(
-                              color: TextColorWhite,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? (Colors.white)
+                                    : Colors.white),
                           ),
                         ),
                       ),

@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Register.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Home.dart';
@@ -51,7 +50,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: BackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -99,12 +97,12 @@ class _LoginState extends State<Login> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: PrimaryColor,
+                            color: Theme.of(context).primaryColor,
                           ),
                           child: Center(
                             child: Text(
                               "Login",
-                              style: Heading2.copyWith(color: TextColorWhite),
+                              style: Heading2.copyWith(color: Colors.white),
                             ),
                           ),
                         ),
@@ -124,16 +122,14 @@ class _LoginState extends State<Login> {
                           height: 50,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: TextColorBlack,
-                          ),
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.black),
                           child: Center(
                             child: Text(
                               "don't have an account? Register",
                               style: paragraph.copyWith(
-                                color: TextColorWhite,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                           ),
                         ),

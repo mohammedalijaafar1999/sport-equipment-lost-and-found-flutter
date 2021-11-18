@@ -11,9 +11,28 @@ const Heading2 = TextStyle(
 
 const paragraph = TextStyle(fontFamily: fontFamily, fontSize: 18);
 
-var PrimaryColor = darkMode ? Color(0xff00ADB5) : Color(0xff2563EB);
-var BackgroundColor = darkMode ? Color(0xff222831) : Color(0xffFFFFFF);
-var HoverColor = darkMode ? Color(0xff1D4ED8) : Color(0xff1D4ED8);
-var SecondaryColor = darkMode ? Color(0xff393E46) : Color(0xffFFFFFF);
-var TextColorWhite = darkMode ? Color(0xffCACACA) : Color(0xffFFFFFF);
-var TextColorBlack = darkMode ? Color(0xffCACACA) : Color(0xff000000);
+Map<int, Color> colorPrimaryLight = {
+  50: Color.fromRGBO(37, 100, 235, .1),
+  100: Color.fromRGBO(37, 100, 235, .2),
+  200: Color.fromRGBO(37, 100, 235, .3),
+  300: Color.fromRGBO(37, 100, 235, .4),
+  400: Color.fromRGBO(37, 100, 235, .5),
+  500: Color.fromRGBO(37, 100, 235, .6),
+  600: Color.fromRGBO(37, 100, 235, .7),
+  700: Color.fromRGBO(37, 100, 235, .8),
+  800: Color.fromRGBO(37, 100, 235, .9),
+  900: Color.fromRGBO(37, 100, 235, 1),
+};
+
+Map<int, Color> colorPrimaryDark = {
+  50: Color.fromRGBO(37, 100, 235, .1),
+  100: Color.fromRGBO(37, 100, 235, .2),
+  200: Color.fromRGBO(37, 100, 235, .3),
+  300: Color.fromRGBO(37, 100, 235, .4),
+  400: Color.fromRGBO(37, 100, 235, .5),
+  500: Color.fromRGBO(37, 100, 235, .6),
+  600: Color.fromRGBO(37, 100, 235, .7),
+  700: Color.fromRGBO(37, 100, 235, .8),
+  800: Color.fromRGBO(37, 100, 235, .9),
+  900: Color.fromRGBO(37, 100, 235, 1),
+};

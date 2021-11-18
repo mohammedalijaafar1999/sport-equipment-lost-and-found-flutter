@@ -64,6 +64,8 @@ class AuthController {
       }),
     );
 
+    print(response.body);
+
     if (response.statusCode == 201) {
       return true;
     } else {

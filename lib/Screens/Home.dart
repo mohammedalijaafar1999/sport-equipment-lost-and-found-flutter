@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
-import 'package:http/http.dart' as http;
-import '../../Utils/Globals.dart' as globals;
 import '../MyEquipments.dart';
 
 class Home extends StatefulWidget {

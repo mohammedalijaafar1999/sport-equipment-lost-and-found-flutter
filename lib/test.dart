@@ -16,6 +16,7 @@ class Test extends StatefulWidget {
 
 class _TestState extends State<Test> {
   File? file;
+  String? token;
 
   void send() async {
     var uri = Uri.parse(globals.hostname + "/api/user/createEquipment");
@@ -50,6 +51,18 @@ class _TestState extends State<Test> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getToken();
+  }
+
+  void getToken() async {
+    final storage = new FlutterSecureStorage();
+    token = await storage.read(key: "token");
+    print(token!);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -70,7 +83,11 @@ class _TestState extends State<Test> {
                     width: 200,
                   )
                 : Image.network(
-                    "https://www.swapp-tech.com/wp-content/uploads/2020/04/placeholder.png",
+                    "http://192.168.8.102/api/user/getImage?equipment_image_id=3",
+                    headers: {
+                      'Authorization':
+                          'Bearer 2|MHqiW4YdI2wW0FAgIohl0ezssGiQ2WR1XhvbHVW9',
+                    },
                     width: 200,
                   )
           ],

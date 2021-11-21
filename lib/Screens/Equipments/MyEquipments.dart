@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:sports_equipment_lost_and_found_it_project/Model/Equipment.dart';
-import '../../Utils/Globals.dart' as globals;
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/ViewEquipment.dart';
+import '../../../../Utils/Globals.dart' as globals;
 
 class MyEquipments extends StatefulWidget {
   MyEquipments({Key? key}) : super(key: key);
@@ -15,11 +16,12 @@ class MyEquipments extends StatefulWidget {
 
 class _MyEquipmentsState extends State<MyEquipments> {
   List<Equipment>? equipments;
+  String? token;
 
   void getUserEquipments() async {
     // get user token
     final storage = new FlutterSecureStorage();
-    var token = await storage.read(key: "token");
+    token = await storage.read(key: "token");
 
     // get user equipment using the token
     var response = await http.get(
@@ -30,20 +32,12 @@ class _MyEquipmentsState extends State<MyEquipments> {
       },
     );
 
-    //print(response.body);
     Map<String, dynamic> equipmentsMap = jsonDecode(response.body);
     // initialize the list to add to it
     equipments = [];
     for (var equipment in equipmentsMap["equipments"]) {
-      //print(equipment);
       var equipmentInstance = Equipment.fromJson(equipment);
       equipments!.add(equipmentInstance);
-      print(equipmentInstance.toString());
-      print("-----------------");
-      print(
-          equipmentInstance.equipment_images![0].equipment_image_id.toString() +
-              " - " +
-              equipmentInstance.equipment_images![0].equipment_image_path!);
     }
 
     setState(() {});
@@ -80,6 +74,7 @@ class _MyEquipmentsState extends State<MyEquipments> {
               : Expanded(
                   child: EquipmentsListWidget(
                     equipments: equipments!,
+                    token: token!,
                   ),
                 ),
         ],
@@ -90,7 +85,9 @@ class _MyEquipmentsState extends State<MyEquipments> {
 
 class EquipmentListTile extends StatelessWidget {
   final Equipment equipment;
-  const EquipmentListTile({Key? key, required this.equipment})
+  final String token;
+  const EquipmentListTile(
+      {Key? key, required this.equipment, required this.token})
       : super(key: key);
 
   @override
@@ -119,7 +116,16 @@ class EquipmentListTile extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6.0),
                     child: Image.network(
-                      "https://www.swapp-tech.com/wp-content/uploads/2020/04/placeholder.png",
+                      // "https://www.swapp-tech.com/wp-content/uploads/2020/04/placeholder.png",
+                      // "http://192.168.8.102/img/placeholder.png",
+                      globals.hostname +
+                          "/api/user/getImage?equipment_image_id=" +
+                          equipment.equipment_images![0].equipment_image_id
+                              .toString(),
+
+                      headers: {
+                        'Authorization': 'Bearer ' + token,
+                      },
                       width: 90,
                       height: 90,
                       fit: BoxFit.cover,
@@ -166,7 +172,14 @@ class EquipmentListTile extends StatelessWidget {
               ),
             )),
         onTap: () {
-          print(equipment.equipment_id);
+          // take the user to the equipment page and pass the id
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) =>
+                  ViewEquipment(equipmentId: equipment.equipment_id.toString()),
+            ),
+          );
         },
       ),
     );
@@ -175,7 +188,9 @@ class EquipmentListTile extends StatelessWidget {
 
 class EquipmentsListWidget extends StatelessWidget {
   final List<Equipment> equipments;
-  const EquipmentsListWidget({Key? key, required this.equipments})
+  final String token;
+  const EquipmentsListWidget(
+      {Key? key, required this.equipments, required this.token})
       : super(key: key);
 
   @override
@@ -186,6 +201,7 @@ class EquipmentsListWidget extends StatelessWidget {
         // return Text("hello");
         return EquipmentListTile(
           equipment: equipments[index],
+          token: token,
         );
       },
     );

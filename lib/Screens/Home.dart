@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
-import '../MyEquipments.dart';
+import 'Equipments/MyEquipments.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);

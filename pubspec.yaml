@@ -68,7 +68,7 @@ flutter:
         - asset: fonts/Raleway-Bold.ttf
         - asset: fonts/Raleway-Light.ttf
         - asset: fonts/Raleway-Heavy.ttf
-        - asset: fonts/Raleway-thin.ttf
+        - asset: fonts/Raleway-Thin.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

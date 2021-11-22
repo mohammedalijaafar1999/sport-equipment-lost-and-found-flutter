@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/AddEquipment.dart';
 import 'Equipments/MyEquipments.dart';
 
 class Home extends StatefulWidget {
@@ -67,6 +68,12 @@ class _HomeState extends State<Home> {
         //Floating action button on Scaffold
         onPressed: () {
           //code to execute on button press
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => AddEquipment(),
+            ),
+          );
         },
         child: Icon(Icons.add), //icon inside button
       ),

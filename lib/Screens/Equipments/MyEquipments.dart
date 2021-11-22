@@ -116,13 +116,12 @@ class EquipmentListTile extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6.0),
                     child: Image.network(
-                      // "https://www.swapp-tech.com/wp-content/uploads/2020/04/placeholder.png",
-                      // "http://192.168.8.102/img/placeholder.png",
-                      globals.hostname +
-                          "/api/user/getImage?equipment_image_id=" +
-                          equipment.equipment_images![0].equipment_image_id
-                              .toString(),
-
+                      (equipment.equipment_images?.isEmpty == true)
+                          ? globals.hostname + "/img/placeholder.png"
+                          : globals.hostname +
+                              "/api/user/getImage?equipment_image_id=" +
+                              equipment.equipment_images![0].equipment_image_id
+                                  .toString(),
                       headers: {
                         'Authorization': 'Bearer ' + token,
                       },
@@ -138,7 +137,13 @@ class EquipmentListTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          equipment.equipment_name.toString(),
+                          equipment.equipment_name.toString().length > 15
+                              ? equipment.equipment_name
+                                      .toString()
+                                      .toString()
+                                      .substring(0, 15) +
+                                  "....."
+                              : equipment.equipment_name.toString(),
                           style: Theme.of(context).textTheme.headline5,
                         ),
                         SizedBox(
@@ -196,6 +201,7 @@ class EquipmentsListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      cacheExtent: 9999,
       itemCount: equipments.length,
       itemBuilder: (BuildContext context, int index) {
         // return Text("hello");

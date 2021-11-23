@@ -1,9 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
+import 'package:sports_equipment_lost_and_found_it_project/Controller/EquipmentController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Model/Equipment.dart';
 import '../../../../Utils/Globals.dart' as globals;
 
@@ -18,6 +15,7 @@ class ViewEquipment extends StatefulWidget {
 class _ViewEquipmentState extends State<ViewEquipment> {
   Equipment? equipment;
   String? token;
+  EquipmentController equipmentController = new EquipmentController();
 
   @override
   void initState() {
@@ -29,21 +27,12 @@ class _ViewEquipmentState extends State<ViewEquipment> {
   void getEquipment() async {
     final storage = new FlutterSecureStorage();
     token = await storage.read(key: "token");
-
-    final queryParameters = {'id': widget.equipmentId};
-    var uri = Uri.http(
-        "192.168.8.102", '/api/user/getEquipmentByID', queryParameters);
-    var headers = {
-      HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: 'Bearer ' + token!
-    };
-    var response = await http.get(uri, headers: headers);
-
-    Map<String, dynamic> equipmentMap = jsonDecode(response.body);
-
-    setState(() {
-      equipment = Equipment.fromJson(equipmentMap["equipments"][0]);
+    equipment = await equipmentController
+        .getEquipment(widget.equipmentId)
+        .catchError((e) {
+      print(e.toString());
     });
+    setState(() {});
   }
 
   @override
@@ -64,9 +53,16 @@ class _ViewEquipmentState extends State<ViewEquipment> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    equipment != null ? equipment!.equipment_name! : "Title",
-                    style: Theme.of(context).textTheme.headline2,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        equipment != null
+                            ? equipment!.equipment_name!
+                            : "Title",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -113,7 +109,7 @@ class _ViewEquipmentState extends State<ViewEquipment> {
                                 (equipment?.equipment_images?.isEmpty == true)
                                     ? globals.hostname + "/img/placeholder.png"
                                     : globals.hostname +
-                                        "/api/user/getImage?equipment_image_id=" +
+                                        "/api/user/image/" +
                                         equipment!.equipment_images![0]
                                             .equipment_image_id
                                             .toString(),
@@ -136,7 +132,7 @@ class _ViewEquipmentState extends State<ViewEquipment> {
                       ),
                       Text(
                         "Description",
-                        style: Theme.of(context).textTheme.headline3,
+                        style: Theme.of(context).textTheme.headline4,
                       ),
                       Text(
                         equipment != null

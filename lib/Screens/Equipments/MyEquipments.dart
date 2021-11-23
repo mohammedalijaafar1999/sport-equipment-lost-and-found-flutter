@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
+import 'package:sports_equipment_lost_and_found_it_project/Controller/EquipmentController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Model/Equipment.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/ViewEquipment.dart';
 import '../../../../Utils/Globals.dart' as globals;
@@ -17,29 +15,15 @@ class MyEquipments extends StatefulWidget {
 class _MyEquipmentsState extends State<MyEquipments> {
   List<Equipment>? equipments;
   String? token;
+  EquipmentController equipmentController = new EquipmentController();
 
   void getUserEquipments() async {
-    // get user token
     final storage = new FlutterSecureStorage();
     token = await storage.read(key: "token");
-
-    // get user equipment using the token
-    var response = await http.get(
-      Uri.parse(globals.hostname + '/api/user/getEquipments'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + token!,
-      },
-    );
-
-    Map<String, dynamic> equipmentsMap = jsonDecode(response.body);
-    // initialize the list to add to it
-    equipments = [];
-    for (var equipment in equipmentsMap["equipments"]) {
-      var equipmentInstance = Equipment.fromJson(equipment);
-      equipments!.add(equipmentInstance);
-    }
-
+    equipments =
+        await equipmentController.getUserEquipments().catchError((err) {
+      print(err);
+    });
     setState(() {});
   }
 
@@ -71,14 +55,23 @@ class _MyEquipmentsState extends State<MyEquipments> {
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : Expanded(
-                  child: EquipmentsListWidget(
-                    equipments: equipments!,
-                    token: token!,
-                  ),
-                ),
+              : Expanded(child: equipmentsListMethod()),
         ],
       ),
+    );
+  }
+
+  ListView equipmentsListMethod() {
+    return ListView.builder(
+      cacheExtent: 9999,
+      itemCount: equipments!.length,
+      itemBuilder: (BuildContext context, int index) {
+        // return Text("hello");
+        return EquipmentListTile(
+          equipment: equipments![index],
+          token: token!,
+        );
+      },
     );
   }
 }
@@ -119,8 +112,8 @@ class EquipmentListTile extends StatelessWidget {
                       (equipment.equipment_images?.isEmpty == true)
                           ? globals.hostname + "/img/placeholder.png"
                           : globals.hostname +
-                              "/api/user/getImage?equipment_image_id=" +
-                              equipment.equipment_images![0].equipment_image_id
+                              "/api/user/image/" +
+                              equipment.equipment_images![0].equipment_image_id!
                                   .toString(),
                       headers: {
                         'Authorization': 'Bearer ' + token,
@@ -139,7 +132,6 @@ class EquipmentListTile extends StatelessWidget {
                         Text(
                           equipment.equipment_name.toString().length > 15
                               ? equipment.equipment_name
-                                      .toString()
                                       .toString()
                                       .substring(0, 15) +
                                   "....."

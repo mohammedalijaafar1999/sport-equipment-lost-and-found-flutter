@@ -26,7 +26,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     //use token to check validity of it
     var response = await http.get(
-      Uri.parse(globals.hostname + '/api/user/getEquipments'),
+      Uri.parse(globals.hostname + '/api/user/equipments'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',

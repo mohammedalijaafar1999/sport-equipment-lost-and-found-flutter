@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Controller/EquipmentController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/CustomWidgets/CustomTextField.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Model/Equipment.dart';
 import '../../Utils/Globals.dart' as globals;
@@ -22,6 +23,7 @@ class _AddEquipmentState extends State<AddEquipment> {
   String? token;
 
   File? imageFile;
+  EquipmentController equipmentController = new EquipmentController();
 
   var titleController = TextEditingController();
   var descriptionController = TextEditingController();
@@ -32,8 +34,18 @@ class _AddEquipmentState extends State<AddEquipment> {
   @override
   void initState() {
     super.initState();
-    getStatuses();
-    getTypes();
+    populatePage();
+  }
+
+  void populatePage() async {
+    statuses = await equipmentController.getStatuses().catchError((e) {
+      print(e.toString());
+    });
+
+    types = await equipmentController.getTypes().catchError((e) {
+      print(e.toString());
+    });
+    setState(() {});
   }
 
   void showImage() async {
@@ -41,45 +53,6 @@ class _AddEquipmentState extends State<AddEquipment> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       imageFile = File(image!.path);
-    });
-  }
-
-  void getStatuses() async {
-    final storage = new FlutterSecureStorage();
-    token = await storage.read(key: "token");
-    var response = await http.get(
-      Uri.parse(globals.hostname + '/api/getEquipmentStatuses'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + token!,
-      },
-    );
-
-    var jsonMap = jsonDecode(response.body);
-    statuses = [];
-    for (var statusMap in jsonMap["equipment_statuses"]) {
-      statuses!.add(EquipmentStatus.fromJson(statusMap));
-    }
-  }
-
-  void getTypes() async {
-    final storage = new FlutterSecureStorage();
-    token = await storage.read(key: "token");
-    var response = await http.get(
-      Uri.parse(globals.hostname + '/api/getEquipmentTypes'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + token!,
-      },
-    );
-
-    var jsonMap = jsonDecode(response.body);
-    types = [];
-    for (var statusMap in jsonMap["equipment_types"]) {
-      types!.add(EquipmentType.fromJson(statusMap));
-    }
-    setState(() {
-      print(statusDropdownSelectedItem);
     });
   }
 
@@ -123,28 +96,13 @@ class _AddEquipmentState extends State<AddEquipment> {
         );
       } else {
         // take all the data and send it to the server
-        var uri = Uri.parse(globals.hostname + "/api/user/createEquipment");
-        var request = new http.MultipartRequest("POST", uri);
-        final storage = new FlutterSecureStorage();
-        var token = await storage.read(key: "token");
-        print(token);
-        request.headers["Authorization"] = "Bearer " + token!;
-        request.fields['equipment_name'] = title;
-        request.fields['equipment_description'] = description;
-        request.fields['equipment_status_id'] = statusDropdownSelectedItem;
-        request.fields['equipment_type_id'] = typeDropdownSelectedItem;
-        request.files.add(
-            await http.MultipartFile.fromPath("images[]", imageFile!.path));
-
-        var res = await request.send();
-        print(request);
-        print("------------------------");
-        print(res.statusCode);
-        print("------------------------");
-        res.stream.transform(utf8.decoder).listen((value) {
-          print(value);
-        });
-        Navigator.pop(context);
+        var completed = await equipmentController
+            .addEquipment(title, description, statusDropdownSelectedItem,
+                typeDropdownSelectedItem, imageFile!)
+            .catchError(() {});
+        if (completed) {
+          Navigator.pop(context);
+        }
       }
     }
   }

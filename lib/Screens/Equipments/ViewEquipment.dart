@@ -43,6 +43,26 @@ class _ViewEquipmentState extends State<ViewEquipment> {
         centerTitle: true,
         title: Text("Mafqoud"),
         backgroundColor: Theme.of(context).primaryColor,
+        actions: [
+          ButtonBar(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                  child: Text(
+                    "Edit",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

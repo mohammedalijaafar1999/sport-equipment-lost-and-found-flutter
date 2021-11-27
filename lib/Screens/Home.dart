@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/AddEquipment.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Settings.dart';
 import 'Equipments/MyEquipments.dart';
 
 class Home extends StatefulWidget {
@@ -36,10 +37,7 @@ class _HomeState extends State<Home> {
       'Index 2: Profile',
       style: optionStyle,
     ),
-    Text(
-      'Index 2: Settings',
-      style: optionStyle,
-    ),
+    Settings(),
   ];
 
   void _onItemTapped(int index) {

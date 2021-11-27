@@ -118,10 +118,10 @@ class _MyEquipmentsState extends State<MyEquipments> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          equipment.equipment_name.toString().length > 15
+                          equipment.equipment_name.toString().length > 10
                               ? equipment.equipment_name
                                       .toString()
-                                      .substring(0, 15) +
+                                      .substring(0, 10) +
                                   "....."
                               : equipment.equipment_name.toString(),
                           style: Theme.of(context).textTheme.headline5,

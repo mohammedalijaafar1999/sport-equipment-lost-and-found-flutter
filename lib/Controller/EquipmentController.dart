@@ -87,6 +87,38 @@ class EquipmentController {
     }
   }
 
+  Future<bool> editEquipment(String id, String title, String description,
+      String statusId, typeId, File? imageFile) async {
+    try {
+      var uri = Uri.parse(globals.hostname + "/api/user/updateEquipment/${id}");
+      var request = new http.MultipartRequest("POST", uri);
+      final storage = new FlutterSecureStorage();
+      var token = await storage.read(key: "token");
+      print(token);
+      request.headers["Authorization"] = "Bearer " + token!;
+      request.fields['equipment_name'] = title;
+      request.fields['equipment_description'] = description;
+      request.fields['equipment_status_id'] = statusId;
+      request.fields['equipment_type_id'] = typeId;
+      if (imageFile != null) {
+        request.files
+            .add(await http.MultipartFile.fromPath("images[]", imageFile.path));
+      }
+
+      var res = await request.send();
+      print(request);
+      print("------------------------");
+      print(res.statusCode);
+      print("------------------------");
+      res.stream.transform(utf8.decoder).listen((value) {
+        print(value);
+      });
+      return Future.value(true);
+    } catch (e) {
+      throw (e.toString());
+    }
+  }
+
   Future<List<EquipmentStatus>> getStatuses() async {
     try {
       List<EquipmentStatus> statuses = [];

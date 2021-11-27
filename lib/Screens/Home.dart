@@ -66,9 +66,9 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         //Floating action button on Scaffold
-        onPressed: () {
+        onPressed: () async {
           //code to execute on button press
-          Navigator.push(
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) => AddEquipment(),

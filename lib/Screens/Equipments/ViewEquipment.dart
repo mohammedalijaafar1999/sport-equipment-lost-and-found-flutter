@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/EquipmentController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Model/Equipment.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/EditEquipment.dart';
 import '../../../../Utils/Globals.dart' as globals;
+import 'package:qr_flutter/qr_flutter.dart';
 
 class ViewEquipment extends StatefulWidget {
   final String equipmentId;
@@ -46,17 +48,27 @@ class _ViewEquipmentState extends State<ViewEquipment> {
         actions: [
           ButtonBar(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                  child: Text(
-                    "Edit",
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            EditEquipment(equipmentId: widget.equipmentId)),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                    child: Text(
+                      "Edit",
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
                   ),
                 ),
               ),
@@ -87,6 +99,20 @@ class _ViewEquipmentState extends State<ViewEquipment> {
                   TextButton(
                     onPressed: () {
                       print("Qr Code");
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          content: Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: QrImage(
+                              data:
+                                  "${globals.hostname}/api/identifyLostEquipment/${widget.equipmentId}",
+                              version: QrVersions.auto,
+                              size: 200.0,
+                            ),
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(

@@ -67,24 +67,12 @@ class _MyEquipmentsState extends State<MyEquipments> {
       itemCount: equipments!.length,
       itemBuilder: (BuildContext context, int index) {
         // return Text("hello");
-        return EquipmentListTile(
-          equipment: equipments![index],
-          token: token!,
-        );
+        return EquipmentListTileWidget(equipments![index]);
       },
     );
   }
-}
 
-class EquipmentListTile extends StatelessWidget {
-  final Equipment equipment;
-  final String token;
-  const EquipmentListTile(
-      {Key? key, required this.equipment, required this.token})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Padding EquipmentListTileWidget(Equipment equipment) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: GestureDetector(
@@ -116,7 +104,7 @@ class EquipmentListTile extends StatelessWidget {
                               equipment.equipment_images![0].equipment_image_id!
                                   .toString(),
                       headers: {
-                        'Authorization': 'Bearer ' + token,
+                        'Authorization': 'Bearer ' + token!,
                       },
                       width: 90,
                       height: 90,
@@ -168,40 +156,21 @@ class EquipmentListTile extends StatelessWidget {
                 ],
               ),
             )),
-        onTap: () {
+        onTap: () async {
           // take the user to the equipment page and pass the id
-          Navigator.push(
+          await Navigator.push(
             context,
             MaterialPageRoute<void>(
               builder: (BuildContext context) =>
                   ViewEquipment(equipmentId: equipment.equipment_id.toString()),
             ),
           );
+          // refresh page
+          equipments = null;
+          setState(() {});
+          getUserEquipments();
         },
       ),
-    );
-  }
-}
-
-class EquipmentsListWidget extends StatelessWidget {
-  final List<Equipment> equipments;
-  final String token;
-  const EquipmentsListWidget(
-      {Key? key, required this.equipments, required this.token})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      cacheExtent: 9999,
-      itemCount: equipments.length,
-      itemBuilder: (BuildContext context, int index) {
-        // return Text("hello");
-        return EquipmentListTile(
-          equipment: equipments[index],
-          token: token,
-        );
-      },
     );
   }
 }

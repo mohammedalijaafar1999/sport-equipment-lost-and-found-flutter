@@ -74,7 +74,7 @@ class _AddEquipmentState extends State<EditEquipment> {
     });
   }
 
-  void updateEquipment() async {
+  Future<bool> updateEquipment() async {
     var title = titleController.text;
     var description = descriptionController.text;
 
@@ -96,9 +96,10 @@ class _AddEquipmentState extends State<EditEquipment> {
           ],
         ),
       );
+      return false;
     } else {
       // take all the data and send it to the server
-      var completed = await equipmentController
+      bool completed = await equipmentController
           .editEquipment(
               equipment?.equipment_id ?? "null",
               title,
@@ -107,9 +108,7 @@ class _AddEquipmentState extends State<EditEquipment> {
               typeDropdownSelectedItem,
               imageFile ?? null)
           .catchError(() {});
-      if (completed) {
-        Navigator.pop(context);
-      }
+      return completed;
     }
     // equipmentController.editEquipment(title, description, statusId, typeId, imageFile);
   }
@@ -126,8 +125,9 @@ class _AddEquipmentState extends State<EditEquipment> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
             child: GestureDetector(
-              onTap: () {
-                updateEquipment();
+              onTap: () async {
+                await updateEquipment();
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -173,7 +173,33 @@ class _AddEquipmentState extends State<EditEquipment> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          bool delete = await showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Alert'),
+                              content: const Text(
+                                  'Are you sure you want to delete the equipment?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('Yes'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('No'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (delete) {
+                            equipmentController
+                                .deleteEquipment(widget.equipmentId);
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          }
+                        },
                         child: Text(
                           "Delete",
                           style: TextStyle(color: Colors.white),

@@ -49,13 +49,17 @@ class _ViewEquipmentState extends State<ViewEquipment> {
           ButtonBar(
             children: [
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute<void>(
                         builder: (BuildContext context) =>
                             EditEquipment(equipmentId: widget.equipmentId)),
                   );
+                  //refresh viewPage
+                  equipment = null;
+                  setState(() {});
+                  getEquipment();
                 },
                 child: Container(
                   decoration: BoxDecoration(

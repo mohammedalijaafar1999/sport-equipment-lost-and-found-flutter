@@ -81,7 +81,7 @@ class EquipmentController {
       res.stream.transform(utf8.decoder).listen((value) {
         print(value);
       });
-      return Future.value(true);
+      return true;
     } catch (e) {
       throw (e.toString());
     }
@@ -113,7 +113,7 @@ class EquipmentController {
       res.stream.transform(utf8.decoder).listen((value) {
         print(value);
       });
-      return Future.value(true);
+      return true;
     } catch (e) {
       throw (e.toString());
     }
@@ -165,6 +165,27 @@ class EquipmentController {
       }
 
       return Future.value(types);
+    } catch (e) {
+      throw (e.toString());
+    }
+  }
+
+  Future<bool> deleteEquipment(String id) async {
+    try {
+      final storage = new FlutterSecureStorage();
+      var token = await storage.read(key: "token");
+      var uri = Uri.parse(globals.hostname + "/api/user/deleteEquipment/$id");
+
+      var res = await http.delete(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print(res.body);
+
+      return true;
     } catch (e) {
       throw (e.toString());
     }

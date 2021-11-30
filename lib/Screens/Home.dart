@@ -72,6 +72,9 @@ class _HomeState extends State<Home> {
               builder: (BuildContext context) => AddEquipment(),
             ),
           );
+          setState(() {
+            _selectedIndex = 0;
+          });
         },
         child: Icon(Icons.add), //icon inside button
       ),

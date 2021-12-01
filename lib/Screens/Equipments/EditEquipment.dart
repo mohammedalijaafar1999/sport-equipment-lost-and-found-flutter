@@ -251,7 +251,8 @@ class _AddEquipmentState extends State<EditEquipment> {
                                                     equipment!
                                                         .equipment_images![0]
                                                         .equipment_image_id
-                                                        .toString(),
+                                                        .toString() +
+                                                    "?lost=0",
                                             headers: {
                                               'Authorization':
                                                   'Bearer ' + token!,
@@ -259,6 +260,21 @@ class _AddEquipmentState extends State<EditEquipment> {
                                             width: double.infinity,
                                             height: 160,
                                             fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                height: 160,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                alignment: Alignment.center,
+                                                child: const Text(
+                                                  'Image Couldn\'t Load!',
+                                                  style: TextStyle(
+                                                      fontSize: 30,
+                                                      color: Colors.white),
+                                                ),
+                                              );
+                                            },
                                           )
                                         : Image.network(
                                             globals.hostname +

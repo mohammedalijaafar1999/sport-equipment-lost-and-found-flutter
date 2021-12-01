@@ -125,6 +125,7 @@ class _MyEquipmentsState extends State<MyEquipments> {
           ),
           //display search options
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               statuses == null && types == null
                   ? CircularProgressIndicator()
@@ -257,13 +258,25 @@ class _MyEquipmentsState extends State<MyEquipments> {
                           : globals.hostname +
                               "/api/user/image/" +
                               equipment.equipment_images![0].equipment_image_id!
-                                  .toString(),
+                                  .toString() +
+                              "?lost=0",
                       headers: {
                         'Authorization': 'Bearer ' + token!,
                       },
                       width: 90,
                       height: 90,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 90,
+                          color: Theme.of(context).primaryColor,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'Image Couldn\'t Load!',
+                            style: TextStyle(fontSize: 8, color: Colors.white),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Expanded(

@@ -162,19 +162,44 @@ class _ViewEquipmentState extends State<ViewEquipment> {
                                         "/api/user/image/" +
                                         equipment!.equipment_images![0]
                                             .equipment_image_id
-                                            .toString(),
+                                            .toString() +
+                                        "?lost=0",
                                 headers: {
                                   'Authorization': 'Bearer ' + token!,
                                 },
                                 width: 160,
                                 height: 160,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 160,
+                                    color: Theme.of(context).primaryColor,
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      'Image Couldn\'t Load!',
+                                      style: TextStyle(
+                                          fontSize: 30, color: Colors.white),
+                                    ),
+                                  );
+                                },
                               )
                             : Image.network(
                                 globals.hostname + "/img/placeholder.png",
                                 width: 160,
                                 height: 160,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 160,
+                                    color: Theme.of(context).primaryColor,
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      'Image Couldn\'t Load!',
+                                      style: TextStyle(
+                                          fontSize: 30, color: Colors.white),
+                                    ),
+                                  );
+                                },
                               ),
                       ),
                       SizedBox(

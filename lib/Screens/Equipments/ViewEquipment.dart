@@ -110,7 +110,7 @@ class _ViewEquipmentState extends State<ViewEquipment> {
                             padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                             child: QrImage(
                               data:
-                                  "${globals.hostname}/api/identifyLostEquipment/${widget.equipmentId}",
+                                  "${globals.hostname}/api/identifyLostEquipment/${widget.equipmentId}?json=1",
                               version: QrVersions.auto,
                               size: 200.0,
                             ),

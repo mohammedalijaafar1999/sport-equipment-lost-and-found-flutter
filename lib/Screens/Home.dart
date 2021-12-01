@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/AddEquipment.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/LostEquipments/ScanPage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Settings.dart';
 import 'Equipments/MyEquipments.dart';
 
@@ -29,10 +30,7 @@ class _HomeState extends State<Home> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
     MyEquipments(),
-    Text(
-      'Index 1: Search',
-      style: optionStyle,
-    ),
+    ScanPage(),
     Text(
       'Index 2: Profile',
       style: optionStyle,

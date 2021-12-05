@@ -1,4 +1,8 @@
 class Equipment {
+  static int equipmentsCount = 0;
+  static int equipmentsLostCount = 0;
+  static int equipmentsDeletedCount = 0;
+
   // class variables
   String? equipment_id;
   String? equipment_name;

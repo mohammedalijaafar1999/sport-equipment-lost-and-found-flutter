@@ -3,6 +3,7 @@ import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthContro
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/AddEquipment.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/LostEquipments/ScanPage.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Profile/ProfilePage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Settings.dart';
 import 'Equipments/MyEquipments.dart';
 
@@ -31,10 +32,7 @@ class _HomeState extends State<Home> {
   List<Widget> _widgetOptions = <Widget>[
     MyEquipments(),
     ScanPage(),
-    Text(
-      'Index 2: Profile',
-      style: optionStyle,
-    ),
+    ProfilePage(),
     Settings(),
   ];
 
@@ -46,6 +44,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final bool showFab = MediaQuery.of(context).viewInsets.bottom == 0.0;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -59,23 +58,25 @@ class _HomeState extends State<Home> {
         child: _widgetOptions[_selectedIndex],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        //Floating action button on Scaffold
-        onPressed: () async {
-          //code to execute on button press
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => AddEquipment(),
-            ),
-          );
-          setState(() {
-            _selectedIndex = 0;
-          });
-        },
-        child: Icon(Icons.add), //icon inside button
-      ),
+      floatingActionButton: showFab
+          ? FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              //Floating action button on Scaffold
+              onPressed: () async {
+                //code to execute on button press
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => AddEquipment(),
+                  ),
+                );
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              },
+              child: Icon(Icons.add), //icon inside button
+            )
+          : null,
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       //floating action button position to center

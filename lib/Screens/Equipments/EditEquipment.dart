@@ -107,7 +107,7 @@ class _AddEquipmentState extends State<EditEquipment> {
               statusDropdownSelectedItem,
               typeDropdownSelectedItem,
               imageFile ?? null)
-          .catchError(() {});
+          .catchError((e) {});
       return completed;
     }
     // equipmentController.editEquipment(title, description, statusId, typeId, imageFile);
@@ -127,7 +127,7 @@ class _AddEquipmentState extends State<EditEquipment> {
             child: GestureDetector(
               onTap: () async {
                 await updateEquipment();
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pop();
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -194,10 +194,9 @@ class _AddEquipmentState extends State<EditEquipment> {
                             ),
                           );
                           if (delete) {
-                            equipmentController
+                            await equipmentController
                                 .deleteEquipment(widget.equipmentId);
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
+                            Navigator.of(context).pop();
                           }
                         },
                         child: Text(

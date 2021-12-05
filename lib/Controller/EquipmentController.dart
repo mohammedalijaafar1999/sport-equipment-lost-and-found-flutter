@@ -26,11 +26,24 @@ class EquipmentController {
 
       Map<String, dynamic> equipmentsMap = jsonDecode(response.body);
       // initialize the list to add to it
+      int counter = 0;
+      int lostCounter = 0;
+      int deletedCounter = 0;
       List<Equipment> equipments = [];
       for (var equipment in equipmentsMap["equipments"]) {
         var equipmentInstance = Equipment.fromJson(equipment);
         equipments.add(equipmentInstance);
+        counter++;
+        if (equipmentInstance.equipment_status!.equipment_status_id! == "2") {
+          lostCounter++;
+        }
+        if (equipmentInstance.equipment_status!.equipment_status_id! == "5") {
+          deletedCounter++;
+        }
       }
+      Equipment.equipmentsCount = counter;
+      Equipment.equipmentsLostCount = lostCounter;
+      Equipment.equipmentsDeletedCount = deletedCounter;
       return Future.value(equipments);
     } catch (e) {
       throw ("Error: " + e.toString());

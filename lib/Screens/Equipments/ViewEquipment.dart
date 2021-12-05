@@ -56,7 +56,6 @@ class _ViewEquipmentState extends State<ViewEquipment> {
                         builder: (BuildContext context) =>
                             EditEquipment(equipmentId: widget.equipmentId)),
                   );
-                  //refresh viewPage
                   equipment = null;
                   setState(() {});
                   getEquipment();

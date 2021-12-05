@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:sports_equipment_lost_and_found_it_project/Model/User.dart';
 import '../../Utils/Globals.dart' as globals;
 
 class AuthController {
@@ -74,24 +75,29 @@ class AuthController {
   }
 
   Future<bool> login(String email, String password) async {
-    var response = await http.post(
-      Uri.parse(globals.hostname + '/api/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'password': password,
-      }),
-    );
+    try {
+      var response = await http.post(
+        Uri.parse(globals.hostname + '/api/login'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': password,
+        }),
+      );
 
-    var data = jsonDecode(response.body);
+      var data = jsonDecode(response.body);
 
-    if (response.statusCode == 201) {
-      final storage = new FlutterSecureStorage();
-      await storage.write(key: 'token', value: data["token"]);
-      return true;
-    } else {
+      if (response.statusCode == 201) {
+        final storage = new FlutterSecureStorage();
+        await storage.write(key: 'token', value: data["token"]);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
       return false;
     }
   }
@@ -110,5 +116,26 @@ class AuthController {
 
     await storage.delete(key: 'token');
     return true;
+  }
+
+  Future<User> getUser() async {
+    try {
+      final storage = new FlutterSecureStorage();
+      var token = await storage.read(key: "token");
+
+      var res = await http.get(
+        Uri.parse(globals.hostname + '/api/user'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      User user = User.fromJson(jsonDecode(res.body));
+
+      return user;
+    } catch (e) {
+      print(e.toString());
+      return User();
+    }
   }
 }

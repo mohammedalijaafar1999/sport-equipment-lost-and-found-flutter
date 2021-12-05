@@ -114,8 +114,19 @@ class _MyEquipmentsState extends State<MyEquipments> {
             height: 10,
           ),
           CustomTextField(
+            prefixIcon: Icon(Icons.search),
+            suffixIcon: GestureDetector(
+              onTap: () {
+                searchController.clear();
+                search();
+              },
+              child: Icon(
+                Icons.clear,
+              ),
+            ),
             hintText: "Search",
             controller: searchController,
+            padding: 0,
             action: (val) {
               search();
             },

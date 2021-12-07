@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Model/Equipment.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Model/User.dart';
 import '../../../../Utils/Globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -15,17 +19,35 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   User? user;
+  Uint8List? file64;
 
   @override
   void initState() {
     super.initState();
     getUserDetails();
+    getProfileImage();
   }
 
   void getUserDetails() async {
     AuthController ac = new AuthController();
     user = await ac.getUser();
     print(user?.name ?? "no user returned");
+    setState(() {});
+  }
+
+  void getProfileImage() async {
+    final storage = new FlutterSecureStorage();
+    var token = await storage.read(key: "token");
+    var res = await http.get(
+      Uri.parse(globals.hostname + "/api/user/profileImage"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(res.body);
+    var parts = res.body.split(",");
+    file64 = Base64Decoder().convert(parts[1]);
     setState(() {});
   }
 
@@ -39,23 +61,40 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Container(
               width: 160.0,
               height: 160.0,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.8),
-                    spreadRadius: 1,
-                    blurRadius: 12,
-                    offset: Offset(0, 0), // changes position of shadow
-                  ),
-                ],
-                color: const Color(0xff7c94b6),
-                image: DecorationImage(
-                  image: NetworkImage(
-                      'https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo='),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(100.0)),
-              ),
+              decoration: file64 == null
+                  ? BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.8),
+                          spreadRadius: 1,
+                          blurRadius: 12,
+                          offset: Offset(0, 0), // changes position of shadow
+                        ),
+                      ],
+                      color: const Color(0xff7c94b6),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            "${globals.hostname}/img/placeholder.png"),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(100.0)),
+                    )
+                  : BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.8),
+                          spreadRadius: 1,
+                          blurRadius: 12,
+                          offset: Offset(0, 0), // changes position of shadow
+                        ),
+                      ],
+                      color: const Color(0xff7c94b6),
+                      image: DecorationImage(
+                        image: MemoryImage(file64!),
+                        fit: BoxFit.none,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(100.0)),
+                    ),
             ),
           ),
           SizedBox(

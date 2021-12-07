@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +18,7 @@ class Test extends StatefulWidget {
 class _TestState extends State<Test> {
   File? file;
   String? token;
+  Uint8List? file64;
 
   void send() async {
     var uri = Uri.parse(globals.hostname + "/api/user/createEquipment");
@@ -83,13 +85,31 @@ class _TestState extends State<Test> {
                     width: 200,
                   )
                 : Image.network(
-                    "http://192.168.8.102/api/user/getImage?equipment_image_id=3",
+                    "http://192.168.8.102/api/user/image/3",
                     headers: {
                       'Authorization':
                           'Bearer 2|MHqiW4YdI2wW0FAgIohl0ezssGiQ2WR1XhvbHVW9',
                     },
                     width: 200,
-                  )
+                  ),
+            TextButton(
+              onPressed: () async {
+                var res = await http.get(
+                  Uri.parse(globals.hostname + "/api/user/profileImage"),
+                  headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Authorization':
+                        'Bearer 14|zj18hZYs2cm7KhPunyDfgeTHEhDytX4XTEvVTPSw',
+                  },
+                );
+                print(res.body);
+                var parts = res.body.split(",");
+                file64 = Base64Decoder().convert(parts[1]);
+                setState(() {});
+              },
+              child: Text('asd'),
+            ),
+            file64 != null ? Image.memory(file64!) : Container()
           ],
         ),
       ),

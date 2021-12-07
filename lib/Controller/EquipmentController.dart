@@ -203,4 +203,25 @@ class EquipmentController {
       throw (e.toString());
     }
   }
+
+  Future<http.Response> identifyLostEquipment(String url) async {
+    try {
+      final storage = new FlutterSecureStorage();
+      var token = await storage.read(key: "token");
+      var res = await http.get(
+        Uri.parse("$url?json=1"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (res.statusCode != 200) {
+        throw "Status Code: ${res.statusCode}";
+      } else {
+        return res;
+      }
+    } catch (e) {
+      throw "${e.toString()}";
+    }
+  }
 }

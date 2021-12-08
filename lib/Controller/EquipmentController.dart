@@ -103,7 +103,7 @@ class EquipmentController {
   Future<bool> editEquipment(String id, String title, String description,
       String statusId, typeId, File? imageFile) async {
     try {
-      var uri = Uri.parse(globals.hostname + "/api/user/updateEquipment/${id}");
+      var uri = Uri.parse(globals.hostname + "/api/user/updateEquipment/$id");
       var request = new http.MultipartRequest("POST", uri);
       final storage = new FlutterSecureStorage();
       var token = await storage.read(key: "token");

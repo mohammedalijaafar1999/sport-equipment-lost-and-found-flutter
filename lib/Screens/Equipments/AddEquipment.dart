@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/EquipmentController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/CustomWidgets/CustomTextField.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Model/Equipment.dart';
 import '../../Utils/Globals.dart' as globals;
-import 'package:http/http.dart' as http;
 
 class AddEquipment extends StatefulWidget {
   AddEquipment({Key? key}) : super(key: key);
@@ -67,6 +63,8 @@ class _AddEquipmentState extends State<AddEquipment> {
     //make sure that there is no empty fields
     if (title.isEmpty ||
         description.isEmpty ||
+        title.trim() == "" ||
+        description.trim() == "" ||
         statusDropdownSelectedItem == null ||
         typeDropdownSelectedItem == null) {
       showDialog<String>(
@@ -103,7 +101,7 @@ class _AddEquipmentState extends State<AddEquipment> {
         var completed = await equipmentController
             .addEquipment(title, description, statusDropdownSelectedItem,
                 typeDropdownSelectedItem, imageFile!)
-            .catchError(() {});
+            .catchError((e) {});
         if (completed) {
           Navigator.pop(context);
         }

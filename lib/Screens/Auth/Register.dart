@@ -26,7 +26,11 @@ class _RegisterState extends State<Register> {
     if (nameController.text.isEmpty ||
         emailController.text.isEmpty ||
         phoneController.text.isEmpty ||
-        passwordController.text.isEmpty) {
+        passwordController.text.isEmpty ||
+        nameController.text.trim() == '' ||
+        emailController.text.trim() == '' ||
+        phoneController.text.trim() == '' ||
+        passwordController.text.trim() == '') {
       showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(

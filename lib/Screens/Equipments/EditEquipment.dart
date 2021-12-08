@@ -81,6 +81,8 @@ class _AddEquipmentState extends State<EditEquipment> {
     //make sure that there is no empty fields
     if (title.isEmpty ||
         description.isEmpty ||
+        title.trim() == "" ||
+        description.trim() == "" ||
         statusDropdownSelectedItem == null ||
         typeDropdownSelectedItem == null) {
       showDialog<String>(

@@ -234,12 +234,12 @@ class _MyEquipmentsState extends State<MyEquipments> {
       itemBuilder: (BuildContext context, int index) {
         // return Text("hello");
 
-        return EquipmentListTileWidget(filteredEquipments![index]);
+        return equipmentListTileWidget(filteredEquipments![index]);
       },
     );
   }
 
-  Padding EquipmentListTileWidget(Equipment equipment) {
+  Padding equipmentListTileWidget(Equipment equipment) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: GestureDetector(

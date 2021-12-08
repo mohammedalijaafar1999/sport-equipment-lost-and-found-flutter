@@ -4,12 +4,19 @@ class Equipment {
   static int equipmentsDeletedCount = 0;
 
   // class variables
+  // ignore: non_constant_identifier_names
   String? equipment_id;
+  // ignore: non_constant_identifier_names
   String? equipment_name;
+  // ignore: non_constant_identifier_names
   String? equipment_description;
+  // ignore: non_constant_identifier_names
   String? user_id;
+  // ignore: non_constant_identifier_names
   EquipmentStatus? equipment_status;
+  // ignore: non_constant_identifier_names
   List<EquipmentImage>? equipment_images;
+  // ignore: non_constant_identifier_names
   EquipmentType? equipment_type;
 
   //constructor
@@ -34,9 +41,13 @@ class Equipment {
 
 class EquipmentStatus {
   // class variables
+  // ignore: non_constant_identifier_names
   String? equipment_status_id;
+  // ignore: non_constant_identifier_names
   String? equipment_status_value;
+  // ignore: non_constant_identifier_names
   String? created_at;
+  // ignore: non_constant_identifier_names
   String? updated_at;
 
   //constructor
@@ -51,12 +62,18 @@ class EquipmentStatus {
 
 class EquipmentImage {
   // class variables
+  // ignore: non_constant_identifier_names
   String? equipment_image_id;
+  // ignore: non_constant_identifier_names
   String? equipment_image_path;
+  // ignore: non_constant_identifier_names
   String? created_at;
+  // ignore: non_constant_identifier_names
   String? updated_at;
+  // ignore: non_constant_identifier_names
   String? equipment_id;
 
+  // ignore: non_constant_identifier_names
   static List<EquipmentImage> getImages(equipment_images_json) {
     var list = equipment_images_json as List;
     List<EquipmentImage> imagesList =
@@ -77,9 +94,13 @@ class EquipmentImage {
 
 class EquipmentType {
   // class variables
+  // ignore: non_constant_identifier_names
   String? equipment_type_id;
+  // ignore: non_constant_identifier_names
   String? equipment_type_value;
+  // ignore: non_constant_identifier_names
   String? created_at;
+  // ignore: non_constant_identifier_names
   String? updated_at;
 
   //constructor

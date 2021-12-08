@@ -3,6 +3,7 @@ import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthContro
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/AddEquipment.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/LostEquipments/ScanPage.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Profile/EditProfilePage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Profile/ProfilePage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Settings.dart';
 import 'Equipments/MyEquipments.dart';
@@ -15,6 +16,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
+  List<Widget> appBarActions = [];
+
   void logout() async {
     AuthController ac = new AuthController();
     bool logedOut = await ac.logout();
@@ -26,9 +30,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
     MyEquipments(),
     ScanPage(),
@@ -37,6 +38,38 @@ class _HomeState extends State<Home> {
   ];
 
   void _onItemTapped(int index) {
+    if (index == 2) {
+      appBarActions.add(Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => EditProfilePage(),
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: ButtonBar(
+              alignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Edit",
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                )
+              ],
+            ),
+          ),
+        ),
+      ));
+    } else {
+      appBarActions.clear();
+    }
     setState(() {
       _selectedIndex = index;
     });
@@ -51,6 +84,7 @@ class _HomeState extends State<Home> {
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: Text("Mafqoud"),
+        actions: appBarActions,
       ),
 
       body: Padding(
@@ -72,6 +106,7 @@ class _HomeState extends State<Home> {
                 );
                 setState(() {
                   _selectedIndex = 0;
+                  appBarActions = [];
                 });
               },
               child: Icon(Icons.add), //icon inside button

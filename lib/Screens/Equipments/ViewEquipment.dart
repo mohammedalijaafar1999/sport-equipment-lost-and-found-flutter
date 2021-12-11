@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/EquipmentController.dart';
@@ -100,22 +102,80 @@ class _ViewEquipmentState extends State<ViewEquipment> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      print("Qr Code");
-                      showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          content: Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                            child: QrImage(
-                              data:
-                                  "${globals.hostname}/identifyLostEquipment/${widget.equipmentId}?json=1",
-                              version: QrVersions.auto,
-                              size: 200.0,
+                    onPressed: () async {
+                      // show for identify if it's not for transfer
+                      if (equipment != null &&
+                          equipment!.equipment_status!.equipment_status_id! !=
+                              "6") {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            content: Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                              child: QrImage(
+                                data:
+                                    "${globals.hostname}/identifyLostEquipment/${widget.equipmentId}?json=1",
+                                version: QrVersions.auto,
+                                size: 200.0,
+                              ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        try {
+                          // show transfer qr code
+                          var res = await equipmentController
+                              .getTransferToken(equipment!.equipment_id!);
+                          print(res.body);
+                          // make sure the response is valid
+                          if (res.statusCode == 200) {
+                            var token =
+                                jsonDecode(res.body)["equipment_transfer"][0]
+                                    ["equipment_transfer_token"];
+                            print(res.body);
+                            print(token);
+                            print(
+                                "${globals.hostname}/api/user/transferEquipment/$token");
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                  child: QrImage(
+                                    data:
+                                        "${globals.hostname}/api/user/transferEquipment/$token",
+                                    version: QrVersions.auto,
+                                    size: 200.0,
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                  child: Text(
+                                      jsonDecode(res.body)["error"]["message"]),
+                                ),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              content: Padding(
+                                padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                child: Text(e.toString()),
+                              ),
+                            ),
+                          );
+                        }
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(

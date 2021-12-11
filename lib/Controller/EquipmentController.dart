@@ -224,4 +224,40 @@ class EquipmentController {
       throw "${e.toString()}";
     }
   }
+
+  Future<http.Response> getTransferToken(String equipmentId) async {
+    try {
+      final storage = new FlutterSecureStorage();
+      var token = await storage.read(key: "token");
+      print(globals.hostname + "/api/user/getTransferToken/$equipmentId");
+      var res = await http.get(
+        Uri.parse(globals.hostname + "/api/user/getTransferToken/$equipmentId"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      return res;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<http.Response> transferEquipment(String url) async {
+    try {
+      final storage = new FlutterSecureStorage();
+      var token = await storage.read(key: "token");
+      print(url);
+      var res = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      return res;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }

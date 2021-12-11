@@ -27,6 +27,13 @@ class _ScanPageState extends State<ScanPage> {
     return equipmentController.identifyLostEquipment(url);
   }
 
+  Future<http.Response> transferEquipment(String url) async {
+    if (!url.contains(globals.hostname)) {
+      throw "Not a valid url";
+    }
+    return equipmentController.transferEquipment(url);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,34 +61,59 @@ class _ScanPageState extends State<ScanPage> {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Contact Info'),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              FutureBuilder(
-                future: identifyLostEquipment(result!.code!),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    print(snapshot.data.body);
-                    var jsonBody = jsonDecode((snapshot.data.body));
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Name: " + jsonBody["user"]["name"]),
-                        Text("Email: " + jsonBody["user"]["email"]),
-                        Text("Phone Number: " +
-                            jsonBody["user"]["mobile_number"]),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
+              // check wither the scan is for identify or transfering the equipment
+              result!.code!.contains("identifyLostEquipment")
+                  ? FutureBuilder(
+                      future: identifyLostEquipment(result!.code!),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          print(snapshot.data.body);
+                          var jsonBody = jsonDecode((snapshot.data.body));
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Contact info",
+                                style: TextStyle(
+                                    fontSize: 32, fontWeight: FontWeight.bold),
+                              ),
+                              Text("Name: " + jsonBody["user"]["name"]),
+                              Text("Email: " + jsonBody["user"]["email"]),
+                              Text("Phone Number: " +
+                                  jsonBody["user"]["mobile_number"]),
+                            ],
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error.toString());
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    )
+                  : FutureBuilder(
+                      future: transferEquipment(result!.code!),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<http.Response> snapshot) {
+                        print(result!.code!);
+                        if (snapshot.hasData) {
+                          print(snapshot.data!.body);
+                          if (snapshot.data!.statusCode == 200) {
+                            return Text("Transfer Completed");
+                          } else {
+                            return Text("Transfer Failed");
+                          }
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error.toString());
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
             ],
           ) /*Text(result?.code ?? 'ads')*/,
           actions: <Widget>[

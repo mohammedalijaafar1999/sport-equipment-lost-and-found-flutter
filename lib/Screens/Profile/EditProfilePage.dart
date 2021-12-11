@@ -130,9 +130,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                         );
                       } else {
-                        var completed = await ac.updateUserContacts(
+                        var res = await ac.updateUserContacts(
                             fullnameController.text, phoneController.text);
-                        if (completed) {
+                        if (res.statusCode == 200) {
                           Navigator.pop(context);
                         } else {
                           print("Somehting went wrong");
@@ -170,6 +170,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   bool isNumeric(String s) {
+    // ignore: unnecessary_null_comparison
     if (s == null) {
       return false;
     }

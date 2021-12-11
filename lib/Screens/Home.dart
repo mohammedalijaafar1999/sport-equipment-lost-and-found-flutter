@@ -5,7 +5,7 @@ import 'package:sports_equipment_lost_and_found_it_project/Screens/Equipments/Ad
 import 'package:sports_equipment_lost_and_found_it_project/Screens/LostEquipments/ScanPage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Profile/EditProfilePage.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Profile/ProfilePage.dart';
-import 'package:sports_equipment_lost_and_found_it_project/Screens/Settings.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Settings/Settings.dart';
 import 'Equipments/MyEquipments.dart';
 
 class Home extends StatefulWidget {
@@ -30,25 +30,31 @@ class _HomeState extends State<Home> {
     }
   }
 
+  // list of page to be displayed for the bottom nabigation
   List<Widget> _widgetOptions = <Widget>[
-    MyEquipments(),
-    ScanPage(),
-    ProfilePage(),
-    Settings(),
+    new MyEquipments(),
+    new ScanPage(),
+    new ProfilePage(),
+    new Settings(),
   ];
 
   void _onItemTapped(int index) {
+    //present edit button if the user in in the profile page
     if (index == 2) {
+      appBarActions.clear();
       appBarActions.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         child: GestureDetector(
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) => EditProfilePage(),
               ),
             );
+            setState(() {
+              _onItemTapped(0);
+            });
           },
           child: Container(
             decoration: BoxDecoration(
@@ -68,8 +74,10 @@ class _HomeState extends State<Home> {
         ),
       ));
     } else {
+      // clear the appbaractions if in anyother page
       appBarActions.clear();
     }
+    // change the index to change the view
     setState(() {
       _selectedIndex = index;
     });
@@ -92,6 +100,8 @@ class _HomeState extends State<Home> {
         child: _widgetOptions[_selectedIndex],
       ),
 
+      // using ternary to show or hide the add floating button
+      // since it stays on even after showing the keyboard
       floatingActionButton: showFab
           ? FloatingActionButton(
               backgroundColor: Theme.of(context).primaryColor,

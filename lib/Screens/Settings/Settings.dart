@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Controller/AuthController.dart';
 import 'package:sports_equipment_lost_and_found_it_project/Screens/Auth/Login.dart';
+import 'package:sports_equipment_lost_and_found_it_project/Screens/Settings/ChangePasswordPage.dart';
 
 class Settings extends StatefulWidget {
   Settings({Key? key}) : super(key: key);
@@ -21,6 +22,38 @@ class _SettingsState extends State<Settings> {
       ),
       child: Column(
         children: [
+          //change password button
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            child: TextButton(
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                      builder: (BuildContext context) => ChangePasswordPage()),
+                );
+              },
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).primaryColor,
+                ),
+                child: Center(
+                  child: Text(
+                    "Change Password",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5!
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Spacer(),
+          // logout button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             child: TextButton(
@@ -52,6 +85,9 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 15,
           ),
         ],
       ),

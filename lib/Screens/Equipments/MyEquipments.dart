@@ -150,6 +150,7 @@ class _MyEquipmentsState extends State<MyEquipments> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: DropdownButton(
+                              isExpanded: true,
                               value: statusDropdownSelectedItem,
                               onChanged: (val) {
                                 statusDropdownSelectedItem = val;
@@ -163,6 +164,7 @@ class _MyEquipmentsState extends State<MyEquipments> {
                                   value: status.equipment_status_id!.toString(),
                                   child: Text(
                                     status.equipment_status_value!.toString(),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 );
                               }).toList(),
@@ -186,6 +188,7 @@ class _MyEquipmentsState extends State<MyEquipments> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: DropdownButton(
+                              isExpanded: true,
                               value: typeDropdownSelectedItem,
                               onChanged: (val) {
                                 typeDropdownSelectedItem = val;
@@ -199,6 +202,7 @@ class _MyEquipmentsState extends State<MyEquipments> {
                                   value: status.equipment_type_id!.toString(),
                                   child: Text(
                                     status.equipment_type_value!.toString(),
+                                    // overflow: TextOverflow.ellipsis,
                                   ),
                                 );
                               }).toList(),

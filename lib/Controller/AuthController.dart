@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:sports_equipment_lost_and_found_it_project/Model/User.dart';
@@ -140,7 +139,7 @@ class AuthController {
     }
   }
 
-  Future<bool> updateUserContacts(String name, String phone) async {
+  Future<http.Response> updateUserContacts(String name, String phone) async {
     try {
       final storage = new FlutterSecureStorage();
       var token = await storage.read(key: "token");
@@ -159,10 +158,36 @@ class AuthController {
 
       print(response.body);
 
-      return true;
+      return response;
     } catch (e) {
       print(e.toString());
-      return false;
+      throw e.toString();
+    }
+  }
+
+  Future<http.Response?> changePassword(String name, String phone,
+      String currentPassword, String newPassword) async {
+    try {
+      final storage = new FlutterSecureStorage();
+      var token = await storage.read(key: "token");
+
+      var response = await http.post(
+        Uri.parse(globals.hostname + '/api/user/edit'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": 'Bearer $token',
+        },
+        body: jsonEncode(<String, String>{
+          'name': name,
+          'mobile_number': phone,
+        }),
+      );
+
+      print(response.body);
+
+      return response;
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

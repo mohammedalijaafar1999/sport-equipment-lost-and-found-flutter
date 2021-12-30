@@ -23,35 +23,35 @@ class _SettingsState extends State<Settings> {
       child: Column(
         children: [
           //change password button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            child: TextButton(
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                      builder: (BuildContext context) => ChangePasswordPage()),
-                );
-              },
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Center(
-                  child: Text(
-                    "Change Password",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5!
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+          //   child: TextButton(
+          //     onPressed: () async {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute<void>(
+          //             builder: (BuildContext context) => ChangePasswordPage()),
+          //       );
+          //     },
+          //     child: Container(
+          //       height: 50,
+          //       width: double.infinity,
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.circular(5),
+          //         color: Theme.of(context).primaryColor,
+          //       ),
+          //       child: Center(
+          //         child: Text(
+          //           "Change Password",
+          //           style: Theme.of(context)
+          //               .textTheme
+          //               .headline5!
+          //               .copyWith(color: Colors.white),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Spacer(),
           // logout button
           Padding(
